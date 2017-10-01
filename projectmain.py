@@ -2,6 +2,7 @@ import os
 import filecmp
 import csv
 import itertools
+import re
 
 def getData(file):
 #Input: file name
@@ -16,25 +17,34 @@ def getData(file):
 	#Your code here:
 
 	with open(file, 'r') as mycsv:
-		reader= csv.reader(mycsv)
+		reader=csv.DictReader(mycsv)
 
-		header=next(reader)
+		lst=[]
+		#header=next(reader)
+
 		for i in reader:
-
+			#print(i)
 			d={}
-			d['First']=i[0]
-			d['Last']=i[1]
-			d['Email']=i[2]
-			d['Class']=i[3]
-			d['DOB']=i[4]
-			return(i)
+			d['First']=i['First']
+			d['Last']=i['Last']
+			d['Email']=i['Email']
+			d['Class']=i['Class']
+			d['DOB']=i['DOB']
+			lst.append(d.copy())
+		#print(lst)
+		return(lst)
+
+
 
 #Input: list of dictionaries
 #Output: Return a string of the form firstName lastName
-	pass
+
 #Sort based on key/column
 def mySort(data,col):
-	sorted(data,'firstName') 
+	funsort=sorted(data,key=lambda x:x[col])
+	return (funsort[0]["First"] +' ' +funsort[0]["Last"] )
+	#return ''
+
 
 
 
@@ -42,20 +52,42 @@ def mySort(data,col):
 
 
 	pass
-##Create a histogram
+#Create a histogram
 def classSizes(data):
 # Input: list of dictionaries
-# Output: Return a list of tuples ordered by
-# ClassName and Class size, e.g
-# [('Senior', 26), ('Junior', 25), ('Freshman', 21), ('Sophomore', 18)]
+	counts={}
+	for student in data:
+		countsget=student.get('Class')
 
-	#Your code here:
+		if countsget not in counts:
+			counts[countsget] =1
+		else:
+			counts[countsget]+=1
+	x=counts.items()
+	t=sorted(x,key=lambda x:(-x[1],x[0]))
+	return t
+#
+
+
+
+
 	pass
-
-
-
-# Find the most common day of the year to be born
+#
+#
+#
 def findDay(a):
+	Bday={}
+	for person in a:
+		getBday=person.get('DOB')
+		y=re.findall('^[0-9]+/([0-9]+)/0-9+',getBday)
+
+
+
+
+
+	print(y)
+
+
 # Input: list of dictionaries
 # Output: Return the day of month (1-31) that is the
 # most often seen in the DOB
@@ -66,16 +98,13 @@ def findDay(a):
 
 # Find the average age (rounded) of the Students
 def findAge(a):
-# Input: list of dictionaries
-# Output: Return the day of month (1-31) that is the
-# most often seen in the DOB
-
 	#Your code here:
-	pass
+	# dt.date.today()
+	# pass
 
 #Similar to mySort, but instead of returning single
 #Student, all of the sorted data is saved to a csv file.
-def mySortPrint(a,col,fileName):
+# def mySortPrint(a,col,fileName):
 #Input: list of dictionaries, key to sort by and output file name
 #Output: None
 
